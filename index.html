@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Color Game</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="players">
+
+    <div class="row">
+      <div class="block">
+        <p>You :</p>
+        <div class="preview"></div>
+        <div class="score"></div>
+      </div>
+    </div>
+
+    <input type="button" value="Start" id="random" />
+    <input type="button" id="submit" value="Submit" style="display: none" />
+  </div>
+
+  <div id="controls">
+    
+    <div class="ranges">
+      <div class="input red">
+        <span class="value">0</span>
+        <input class="range" type="range" id="red-value" value="0" max="255" min="0" step="1">
+      </div>
+
+      <div class="input green">
+        <span class="value">0</span>
+        <input class="range" type="range" id="green-value" value="0" max="255" min="0" step="1">
+      </div>
+
+      <div class="input blue">
+        <span class="value">0</span>
+        <input class="range" type="range" id="blue-value" value="0" max="255" min="0" step="1">
+      </div>
+    </div>
+
+  </div>
+
+  <div class="debug">
+    <div>Guess : <span class="debugGuess"></span></div>
+    <div>Input : <span class="debugInput"></span></div>
+    <div>Distance : <span class="debugDistance"></span></div>
+    <div>Max distance : <span class="debugMaxDistance"></span></div>
+    <div>Score : <span class="debugScore"></span></div>
+  </div>
+  
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
