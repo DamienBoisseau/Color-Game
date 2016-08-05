@@ -135,7 +135,7 @@ $(function() {
   });
   
   // Update preview color when range changes
-  $('.range').click(function() {
+  $('.range').on('input change', function() {
     updateSelfPreviewColor();
     updateDebug();
   });
