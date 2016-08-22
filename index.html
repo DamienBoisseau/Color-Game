@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <title>Color Game</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
   <div class="players">
 
     <div class="row">
-      <div class="block">
-        <p>You :</p>
+      <div class="block" id="self">
+        <div class="username"></div>
         <div class="preview"></div>
         <div class="score"></div>
       </div>
@@ -51,6 +51,8 @@
   </div>
   
   <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-  <script src="script.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/events.js"></script>
+  <script src="/js/script.js"></script>
 </body>
 </html>

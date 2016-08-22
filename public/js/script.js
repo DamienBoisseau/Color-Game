@@ -4,21 +4,28 @@ var colorInput = {r: 0, g: 0, b: 0};
 var colorDistance = 0;
 var colorMaxDistance = 0;
 var score = 0;
-var showDebug = true;
+var showDebug = false;
 var randomButton = $('#random');
 var submitButton = $('#submit');
 var debug = $('.debug');
 
 // Generate a random color (RGB)
-function randomColor() {
+function gameStart(color) {
 
   // Get color values
-  colorToGuess.r = Math.ceil((Math.random() * 255));
-  colorToGuess.g = Math.ceil((Math.random() * 255));
-  colorToGuess.b = Math.ceil((Math.random() * 255));
+  if(typeof color === 'undefined') {
+    colorToGuess.r = Math.ceil((Math.random() * 255));
+    colorToGuess.g = Math.ceil((Math.random() * 255));
+    colorToGuess.b = Math.ceil((Math.random() * 255));
+  }
+  else {
+    colorToGuess = color;
+  }
 
   // Set background color with the new color
   $('body').css('background-color', setColor(colorToGuess));
+
+  showButton(false);
 
 }
 
@@ -36,7 +43,7 @@ function updateSelfPreviewColor() {
   $('.blue > .value').text(colorInput.b);
 
   // Set preview background with the new color
-  $('.preview').css('background-color', setColor(colorInput));
+  $('#self').find('.preview').css('background-color', setColor(colorInput));
 
 }
 
@@ -74,13 +81,14 @@ function getMaxDistance(color) {
 }
 
 // Submit the color and show the score (%)
-function submitColor() {
+function submitColor(userId, color) {
 
-  colorDistance = getDistance(colorInput);
+  colorDistance = getDistance(color);
   colorMaxDistance = getMaxDistance(colorToGuess);
-  score = (100 * (1 - (colorDistance / colorMaxDistance)));
+  score = (100 * (1 - (colorDistance / colorMaxDistance))).toFixed(2);
 
-  $('.score').text(score.toFixed(2) + ' %');
+  $('#' + userId).find('.score').text(score + ' %');
+
 }
 
 // Enable or disable debug
@@ -102,7 +110,7 @@ function updateDebug() {
   $('.debugInput').text(setColor(colorInput));
   $('.debugDistance').text(colorDistance);
   $('.debugMaxDistance').text(colorMaxDistance);
-  $('.debugScore').text(score.toFixed(2) + ' %');
+  $('.debugScore').text(score + ' %');
   
 }
 
@@ -129,9 +137,9 @@ $(function() {
 
   // Random color
   $('#random').click(function() {
-    randomColor();
+    gameStart();
+    socket.emit('gameStart', colorToGuess);
     updateDebug();
-    showButton(false);
   });
   
   // Update preview color when range changes
@@ -142,9 +150,36 @@ $(function() {
   
   // Submit the inputted color
   $('#submit').click(function() {
-    submitColor();
+    submitColor('self', colorInput);
     updateDebug();
     showButton(true);
+    socket.emit('submitColor', {colorInput, score});
   });
 
+  // Ask user's name
+  var username;
+  while(!username) {
+    username = window.prompt('Enter your name');
+  }
+  $('#self > .username').text(username);
+  socket.emit('join', username);
+
 });
+
+function addPlayer(userName, userId) {
+
+  var html = '<div class="block" id="' + userId + '">' + 
+             '<div class="username">' + userName + '</div>' +
+             '<div class="preview"></div>' +
+             '<div class="score"></div>' +
+             '</div> ';
+
+  $('.row').append(html);
+  
+}
+
+function removePlayer(userId) {
+
+  $('#' + userId).remove();
+  
+}
